@@ -121,19 +121,27 @@ Overall, the code successfully finds the shortest path from the source to the de
 
 
 '''
-another one
+# Define the A* algorithm function which finds the shortest path from start_node to stop_node
 def aStarAlgo(start_node, stop_node):
+    # Initialize the open set with the start node
     open_set = {start_node}
+    # Initialize the closed set
     closed_set = set()
-    g = {start_node: 0}  # store distance from starting node
-    parents = {start_node: start_node}  # parents contain an adjacency map of all nodes
+    # Initialize the dictionary to store the distance from the starting node
+    g = {start_node: 0}
+    # Initialize the dictionary to store the parents of each node
+    parents = {start_node: start_node}
 
+    # While the open set is not empty
     while open_set:
+        # Select the node with the minimum total cost (g(n) + heuristic(n)) from the open set
         n = min(open_set, key=lambda x: g[x] + heuristic(x))
 
+        # If the selected node is the goal node or it's not in the graph, exit the loop
         if n == stop_node or n not in Graph_nodes:
             break
 
+        # Expand the selected node and update its neighbors
         for m, weight in get_neighbors(n):
             if m not in open_set and m not in closed_set:
                 open_set.add(m)
@@ -146,14 +154,16 @@ def aStarAlgo(start_node, stop_node):
                     closed_set.remove(m)
                     open_set.add(m)
 
+        # Move the selected node from open set to closed set
         open_set.remove(n)
         closed_set.add(n)
 
+    # If the goal node is not reached, print "Path does not exist!" and return None
     if n != stop_node:
         print('Path does not exist!')
         return None
 
-    # Reconstruct path
+    # Reconstruct the path from start node to goal node
     path = []
     while n != start_node:
         path.append(n)
@@ -161,16 +171,20 @@ def aStarAlgo(start_node, stop_node):
     path.append(start_node)
     path.reverse()
 
+    # Print the found path
     print('Path found:', path)
     return path
 
+# Function to get neighbors of a node
 def get_neighbors(v):
     return Graph_nodes[v] if v in Graph_nodes else []
 
+# Heuristic function to estimate the cost from a node to the goal node
 def heuristic(n):
     H_dist = {'A': 11, 'B': 6, 'C': 99, 'D': 1, 'E': 7, 'G': 0}
     return H_dist.get(n, float('inf'))
 
+# Dictionary representing the graph with nodes and their neighbors
 Graph_nodes = {
     'A': [('B', 2), ('E', 3)],
     'B': [('A', 2), ('C', 1), ('G', 9)],
@@ -180,6 +194,7 @@ Graph_nodes = {
     'G': [('B', 9), ('D', 1)]
 }
 
+# Call the A* algorithm function with start node 'A' and stop node 'G'
 aStarAlgo('A', 'G')
 
 
